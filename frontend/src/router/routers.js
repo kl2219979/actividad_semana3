@@ -4,7 +4,8 @@ import {  } from './../components/login.js'
 
 // rutas disponibles de la pagina
 const routes = {
-    "/": loginPage,
+    "/": CreateUserPage,
+    "/login": loginPage,
     "/characters": characterPage,
     "/locations": locationsPage,
     "/episodes": episodesPage
