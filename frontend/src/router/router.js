@@ -1,5 +1,6 @@
 import { qs } from "../utils/dom.js";
-import { routes, notFoundView } from "./routes.js";
+import { routes} from "./routes.js";
+import { notFoundView, setupNotFoundVideo } from "./../components/notFoundView.js"
 
 export function navigateTo(path) {
     window.history.pushState({}, "", path);
@@ -13,7 +14,7 @@ export function renderRouter () {
     }
 
     const currentPath = window.location.pathname
-    const route = routes[currentPath] ?? {render: notFoundView}
+    const route = routes[currentPath] ?? {render: notFoundView, setup: setupNotFoundVideo}
     const render = route.render ?? notFoundView
     app.innerHTML = render()
 

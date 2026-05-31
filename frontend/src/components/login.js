@@ -7,7 +7,7 @@ import { navigateTo } from '../router/router.js';
 
 export function loginPage() {
     return `
-<main class="min-h-screen -[url('/fondohome.png')] bg-size-[100%_100%] bg-center bg-no-repeat flex items-center justify-center px-4 text-white ">
+<main class="min-h-screen -[url('')] bg-size-[100%_100%] bg-center bg-no-repeat flex items-center justify-center px-4 text-white ">
 <video autoplay muted loop playsinline class="video-fondo fixed top-0 left-0 size-[100%_100%] object-cover -z-10 min-h-screen min-w-screen">
 <source src="/videoFondo.mp4" type="video/mp4"> </video>
         <section class="w-full max-w-md">
