@@ -47,9 +47,9 @@ export function createUserPage() {
             <button type="submit" class="pulse-glow mt-2 h-11 rounded-md bg-cyan-400 font-bold uppercase text-slate-950 shadow-[0_0_18px_rgba(34,211,238,0.4)] transition-all hover:bg-cyan-300 hover:scale-[1.01] active:scale-[0.99]">
                 Crear Usuario
             </button>
-            <button type="button" id="btn_login" class="mt-3 h-11 rounded-md border border-lime-400 text-lime-300 font-bold uppercase shadow-[0_0_18px_rgba(132,204,22,0.4)] transition-all hover:bg-lime-300 hover:text-slate-950 hover:scale-[1.01] active:scale-[0.99]">
-                Volver a Login
-            </button>
+            <a href="/login" class="text-center mt-3 text-sm text-slate-400">
+                    Ya tienes cuenta? <span class="font-bold text-cyan-300 hover:underline">Inicia sesión aquí</span>
+                </a>
         </form>
     </section>
 </main>
@@ -57,8 +57,11 @@ export function createUserPage() {
 }
 
 export function setupCreateUser () {
-    const form = qs('#form_register');
-    const btnLogin = qs('#btn_login');
+    const form = qs('#form_register')
+    const btnLogin = qs('#btn_login')
+    const video = qs('.video-fondo')
+
+    video.playbackRate = 0.75
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault()
