@@ -7,11 +7,10 @@ const URL_EPISODES = 'https://rickandmortyapi.com/api/episode';
 
 // funcion que trae los datos de la APi Rick and Morty
 export async function fetchApi(url) {
-    const response = await fetch(url)
+    const response = await fetch(url);
     if (!response.ok) {
         const text = response.text().catch(() => response.statusText);
         throw new Error(`HTTP ${response.status}: ${text}`);
     }
     return response.json();
 }
-
