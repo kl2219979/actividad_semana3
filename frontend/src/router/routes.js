@@ -37,10 +37,12 @@ export const routes = {
 }
 
 export const notFoundView = () => `
-    <main class="min-h-screen flex items-center justify-center bg-slate-950 px-4 text-white">
+    <main class="min-h-screen -[url('/fondoLogin.png')] bg-size-[100%_100%] bg-center bg-no-repeat flex items-center justify-center px-4 text-white ">
+    <video autoplay muted loop playsinline class="fondo-home fixed top-0 left-0 size-[100%_100%] object-cover -z-10 min-h-screen min-w-screen">
+    <source src="/fondohome.mp4" type="video/mp4"> </video>
         <section class="grid gap-4 text-center">
-            <h1 class="text-3xl font-black text-cyan-300">404</h1>
-            <p class="text-slate-300">La ruta que buscas no existe.</p>
+            <h1 class="text-3xl font-black text-purple-950">404</h1>
+            <p class="text-purple-950">La ruta que buscas no existe.</p>
             <a href="/login" class="rounded-md bg-lime-400 px-4 py-2 font-bold uppercase text-slate-950">
                 Volver al login
             </a>
