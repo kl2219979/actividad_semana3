@@ -46,8 +46,8 @@ export function loginPage() {
                     Iniciar Sesión
                 </button>
 
-                <a href="/register" class="mt-3 flex h-11 items-center justify-center rounded-md border border-cyan-400 text-cyan-300 font-bold uppercase shadow-[0_0_18px_rgba(34,211,238,0.4)] transition-all hover:bg-cyan-300 hover:text-slate-950 hover:scale-[1.01] active:scale-[0.99]">
-                    Crear usuario
+                <a href="/register" class="text-center mt-3 text-sm text-slate-400">
+                    Aún no tienes cuenta? <span class="font-bold text-lime-300 hover:underline">Regístrate aquí</span>
                 </a>
             </form>
         </section>
@@ -57,6 +57,9 @@ export function loginPage() {
 
 export function setupLogin() {
     const form = qs('#form_login')
+    const video = qs('.video-fondo')
+
+    video.playbackRate = 0.75
 
     form.addEventListener('submit', async (event) => {
         event.preventDefault()

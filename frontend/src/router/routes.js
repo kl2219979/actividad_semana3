@@ -1,5 +1,6 @@
 import { loginPage, setupLogin } from './../components/login.js';
 import { createUserPage, setupCreateUser } from './../components/createUser.js';
+import { showCharacters, setupCharacters } from './../components/character.js';
 // importar funciones para renderizar la pagina
 
 // rutas disponibles de la pagina
@@ -20,8 +21,8 @@ export const routes = {
         isAuthorized: false,
     },
     "/characters": {
-        render: null,
-        setup: null,
+        render: showCharacters,
+        setup: setupCharacters,
         isAuthorized: false,
     },
     "/locations": {

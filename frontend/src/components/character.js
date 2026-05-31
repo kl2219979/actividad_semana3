@@ -2,6 +2,8 @@ import {qs} from './../utils/dom.js';
 
 export function showCharacters() {
   return `
+  <main class="relative min-h-screen px-4 text-white">
+    <div class="fixed inset-0 -z-10 bg-[url('/fondoImagen.png')] bg-cover bg-center bg-no-repeat"></div>
     <section class="min-h-screen px-4 py-6">
     <div class="mx-auto max-w-6xl">
       <div
@@ -34,6 +36,7 @@ export function showCharacters() {
       ></div>
     </div>
   </section>
+    </main>
     `;
 }
 
@@ -43,9 +46,9 @@ export function setupCharacters() {
   const btnSiguiente = qs("#btnSiguiente");
   const currentPage = qs("#pagina");
   const endpoint = `https://rickandmortyapi.com/api/character/?page=${numberPage}`;
-  cargarPersonajes();
+  
 
-  const actualizarPagina = () => {
+  function actualizarPagina () {
     currentPage.textContent = numberPage;
   };
 
@@ -146,5 +149,6 @@ export function setupCharacters() {
       console.log(error);
     }
   };
+  cargarPersonajes();
   
 }
