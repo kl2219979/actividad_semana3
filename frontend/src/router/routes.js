@@ -1,9 +1,7 @@
 import { loginPage, setupLogin } from './../components/login.js';
 import { createUserPage, setupCreateUser } from './../components/createUser.js';
 import { showCharacters, setupCharacters } from './../components/character.js';
-// importar funciones para renderizar la pagina
-
-
+import { showEpisodes, setupEpisodes } from './../components/episodes.js'
 
 // rutas disponibles de la pagina
 export const routes = {
@@ -33,8 +31,8 @@ export const routes = {
         isAuthorized: false,
     },
     "/episodes": {
-        render: null,
-        setup: null,
+        render: showEpisodes,
+        setup: setupEpisodes,
         isAuthorized: false,
     }
 }
