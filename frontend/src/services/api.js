@@ -12,5 +12,5 @@ export async function fetchApi(url) {
         const text = response.text().catch(() => response.statusText);
         throw new Error(`HTTP ${response.status}: ${text}`);
     }
-    return response.json();
+    return await response.json();
 }

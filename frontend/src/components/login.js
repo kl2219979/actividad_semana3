@@ -1,3 +1,8 @@
+import {qs} from './../utils/dom.js';
+import {credencialError, credencialSuccess} from './../utils/alerts.js';
+import {loginUser} from './../services/authService.js';
+import {authStore} from './../store/authStore.js';
+
 
 export function loginPage() {
     return `
@@ -45,24 +50,25 @@ export function loginPage() {
         </section>
     </main>
 `
+}
 
-    // const form = qs('#form_login')
-    // form.addEventListener('submit', async (event) => {
-    //     event.preventDefault()
+export function setupLogin() {
+    const form = qs('#form_login')
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault()
 
-    //     const username = qs('#login_username').value.trim()
-    //     const password = qs('#login_password').value.trim()
+        const username = qs('#login_username').value.trim()
+        const password = qs('#login_password').value.trim()
 
-    //     const user = await loginUser(username, password)
+        const user = await loginUser(username, password)
 
-    //     if (!user) {
-    //         credencialError('Usuario o contraseña incorrectos')
-    //         return
-    //     }
+        if (!user) {
+            credencialError('Usuario o contraseña incorrectos')
+            return
+        }
         
-    //     credencialSuccess('Inicio de seccion exitoso')
+        credencialSuccess('Inicio de seccion exitoso')
 
-    //     authStore.onLogin(user)
-    //     navigateTo('/home')
-    // })
+        authStore.onLogin(user)
+    })
 }

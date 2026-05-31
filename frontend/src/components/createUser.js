@@ -1,3 +1,8 @@
+import {qs} from './../utils/dom.js';
+import {credencialError, credencialSuccess} from './../utils/alerts.js';
+import {createUser} from './../services/authService.js';
+import {authStore} from './../store/authStore.js';
+
 
 export function createUserPage() {
     return  `
@@ -48,34 +53,34 @@ export function createUserPage() {
     </section>
 </main>
 `
-
-
-// const form = qs('#form_register')
-// form.addEventListener('submit', async (event) => {
-//     event.preventDefault()
-//     const username = qs('#register_username').value.trim()
-//     const password = qs('#register_password').value.trim()
-//     if (!username || !password) {
-//         credencialError('Todos los campos son obligatorios')
-//         return
-//     }
-//     const user = await createUser(username, password)
-
-//     if (!user) {
-//         credencialError('No se pudo crear el usuario')
-//         return
-//     }
-
-//     credencialSuccess('Usuario creado exitosamente')
-
-//     authStore.onLogin(user)
-//     navigateTo('/login')
-// })
-
-// const btnLogin = qs('#btn_login')
-// btnLogin.addEventListener('click', () => {
-//     navigateTo('/login') // o la ruta que uses para tu formulario de login
-// }   )
-
 }
+
+export function setupCreateUser () {
+    const form = qs('#form_register')
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault()
+        const username = qs('#register_username').value.trim()
+        const password = qs('#register_password').value.trim()
+        if (!username || !password) {
+            credencialError('Todos los campos son obligatorios')
+            return
+        }
+        const user = await createUser(username, password)
+
+        if (!user.ok) {
+            credencialError('No se pudo crear el usuario')
+            return
+        }
+
+        credencialSuccess('Usuario creado exitosamente')
+
+        authStore.onLogin(user)
+    })
+
+    const btnLogin = qs('#btn_login')
+    btnLogin.addEventListener('click', () => {
+        // to do
+    })
+}
+
 
