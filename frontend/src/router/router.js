@@ -1,6 +1,10 @@
-import { qs } from "../utils/dom";
-import { routes, notFoundView } from "./routes";
+import { qs } from "../utils/dom.js";
+import { routes, notFoundView } from "./routes.js";
 
+export function navigateTo(path) {
+    window.history.pushState({}, "", path);
+    renderRouter();
+}
 
 export function renderRouter () {
     const app = qs('#app')
@@ -9,21 +13,20 @@ export function renderRouter () {
     }
 
     const currentPath = window.location.pathname
-    console.log(currentPath)
     const route = routes[currentPath] ?? {render: notFoundView}
-    console.log(route)
-    app.innerHTML = route.render()
+    const render = route.render ?? notFoundView
+    app.innerHTML = render()
 
-    if(route.setup) {
+    if (route.setup) {
         route.setup()
     }
 }
 
 export function initRouter() {
     document.addEventListener('click', (e) => {
-        const link = event.target.closest('a')
+        const link = e.target.closest('a')
 
-        if(!link) {
+        if (!link) {
             return
         }
         const href = link.getAttribute('href')
@@ -32,9 +35,8 @@ export function initRouter() {
             return
         }
 
-        event.preventDefault()
-        window.history.pushState({}, "", href)
-        renderRouter()
+        e.preventDefault()
+        navigateTo(href)
     })
     window.addEventListener("popstate", renderRouter)
     renderRouter()

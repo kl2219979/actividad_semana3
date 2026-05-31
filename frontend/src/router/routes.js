@@ -1,4 +1,3 @@
-import { qs } from './../utils/dom.js';
 import { loginPage, setupLogin } from './../components/login.js';
 import { createUserPage, setupCreateUser } from './../components/createUser.js';
 // importar funciones para renderizar la pagina
@@ -6,8 +5,8 @@ import { createUserPage, setupCreateUser } from './../components/createUser.js';
 // rutas disponibles de la pagina
 export const routes = {
     "/": {
-        render: null,
-        setup: null,
+        render: loginPage,
+        setup: setupLogin,
         isAuthorized: false,
     },
     "/login": {
@@ -37,7 +36,17 @@ export const routes = {
     }
 }
 
-export const notFoundView = null;
+export const notFoundView = () => `
+    <main class="min-h-screen flex items-center justify-center bg-slate-950 px-4 text-white">
+        <section class="grid gap-4 text-center">
+            <h1 class="text-3xl font-black text-cyan-300">404</h1>
+            <p class="text-slate-300">La ruta que buscas no existe.</p>
+            <a href="/login" class="rounded-md bg-lime-400 px-4 py-2 font-bold uppercase text-slate-950">
+                Volver al login
+            </a>
+        </section>
+    </main>
+`;
 
 // export const navigateTo = (path) => {
 //     history.pushState({}, "", path);

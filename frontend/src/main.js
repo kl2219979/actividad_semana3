@@ -1,5 +1,4 @@
-import { initRouter, renderRouter } from './router/router'
+import { initRouter } from './router/router.js'
 import './style/globals.css'
 
 initRouter();
-renderRouter();

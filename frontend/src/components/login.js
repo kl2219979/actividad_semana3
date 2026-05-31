@@ -2,6 +2,7 @@ import {qs} from './../utils/dom.js';
 import {credencialError, credencialSuccess} from './../utils/alerts.js';
 import {loginUser} from './../services/authService.js';
 import {authStore} from './../store/authStore.js';
+import { navigateTo } from '../router/router.js';
 
 
 export function loginPage() {
@@ -45,7 +46,9 @@ export function loginPage() {
                     Iniciar Sesión
                 </button>
 
-                
+                <a href="/register" class="mt-3 flex h-11 items-center justify-center rounded-md border border-cyan-400 text-cyan-300 font-bold uppercase shadow-[0_0_18px_rgba(34,211,238,0.4)] transition-all hover:bg-cyan-300 hover:text-slate-950 hover:scale-[1.01] active:scale-[0.99]">
+                    Crear usuario
+                </a>
             </form>
         </section>
     </main>
@@ -54,13 +57,25 @@ export function loginPage() {
 
 export function setupLogin() {
     const form = qs('#form_login')
+
     form.addEventListener('submit', async (event) => {
         event.preventDefault()
 
         const username = qs('#login_username').value.trim()
         const password = qs('#login_password').value.trim()
 
-        const user = await loginUser(username, password)
+        if (!username || !password) {
+            credencialError('Todos los campos son obligatorios')
+            return
+        }
+
+        let user = null
+        try {
+            user = await loginUser(username, password)
+        } catch (error) {
+            credencialError(error.message)
+            return
+        }
 
         if (!user) {
             credencialError('Usuario o contraseña incorrectos')
@@ -70,5 +85,6 @@ export function setupLogin() {
         credencialSuccess('Inicio de seccion exitoso')
 
         authStore.onLogin(user)
+        navigateTo('/characters')
     })
 }

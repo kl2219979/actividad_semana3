@@ -2,6 +2,7 @@ import {qs} from './../utils/dom.js';
 import {credencialError, credencialSuccess} from './../utils/alerts.js';
 import {createUser} from './../services/authService.js';
 import {authStore} from './../store/authStore.js';
+import { navigateTo } from '../router/router.js';
 
 
 export function createUserPage() {
@@ -56,30 +57,39 @@ export function createUserPage() {
 }
 
 export function setupCreateUser () {
-    const form = qs('#form_register')
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault()
+    const form = qs('#form_register');
+    const btnLogin = qs('#btn_login');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault()
         const username = qs('#register_username').value.trim()
         const password = qs('#register_password').value.trim()
+        
         if (!username || !password) {
             credencialError('Todos los campos son obligatorios')
             return
         }
-        const user = await createUser(username, password)
-
-        if (!user.ok) {
-            credencialError('No se pudo crear el usuario')
+        let user = null
+        try {
+            user = await createUser(username, password)
+        } catch (error) {
+            credencialError(error.message)
             return
         }
 
+        if (!user) {
+            credencialError('Ese usuario ya existe')
+            return
+        }
         credencialSuccess('Usuario creado exitosamente')
 
         authStore.onLogin(user)
+        navigateTo('/characters')
     })
 
-    const btnLogin = qs('#btn_login')
+    
     btnLogin.addEventListener('click', () => {
-        // to do
+        navigateTo('/login')
     })
 }
 
