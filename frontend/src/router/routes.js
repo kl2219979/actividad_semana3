@@ -7,11 +7,6 @@ import { showEpisodes, setupEpisodes } from './../components/episodes.js';
 
 // rutas disponibles de la pagina
 export const routes = {
-    "/": {
-        render: loginPage,
-        setup: setupLogin,
-        isAuthorized: false,
-    },
     "/login": {
         render: loginPage,
         setup: setupLogin,
@@ -25,17 +20,17 @@ export const routes = {
     "/characters": {
         render: showCharacters,
         setup: setupCharacters,
-        isAuthorized: false,
+        isAuthorized: true,
     },
     "/locations": {
         render: null,
         setup: null,
-        isAuthorized: false,
+        isAuthorized: true,
     },
     "/episodes": {
         render: showEpisodes,
         setup: setupEpisodes,
-        isAuthorized: false,
+        isAuthorized: true,
     }
 }
 

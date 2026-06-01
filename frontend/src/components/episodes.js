@@ -1,8 +1,10 @@
 import { qs } from './../utils/dom.js';
+import { authStore } from '../store/authStore.js';
+import { navigateTo } from '../router/router.js';
 
 export function showEpisodes() {
   return `
-   <header class="w-full sticky top-0 z-10 bg-slate-800 backdrop-blur-sm border-b border-slate-800/50">
+  <header class="w-full sticky top-0 z-10 bg-slate-800 backdrop-blur-sm border-b border-slate-800/50">
     <div class="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
       <div class="flex-shrink-0">
         <img src="/public/logo.svg" alt="Logo" class="h-30 w-auto">
@@ -12,7 +14,7 @@ export function showEpisodes() {
       </h1>
       <div class="flex items-center gap-6">
         <nav class="flex items-center gap-6">
-          <a href="/" class="text-sm font-semibold text-slate-300 hover:text-lime-400 transition">Characters</a>
+          <a href="/characters" class="text-sm font-semibold text-slate-300 hover:text-lime-400 transition">Characters</a>
           <a href="/locations" class="text-sm font-semibold text-slate-300 hover:text-lime-400 transition">Locations</a>
         </nav>
         <button id="LogoutBtn" class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700">
@@ -45,6 +47,7 @@ export function setupEpisodes() {
   const btnAnterior = qs("#btnAnteriorEp");
   const btnSiguiente = qs("#btnSiguienteEp");
   const currentPage = qs("#paginaEp");
+  const logout = qs('#LogoutBtn');
 
   const actualizarPagina = () => {
     currentPage.textContent = numberPage;
@@ -93,8 +96,9 @@ export function setupEpisodes() {
     else alert("Estas en la pagina 1, no puedes retroceder");
   });
 
-    Logout.addEventListener("click",()=>{
+  logout.addEventListener("click",()=>{
     authStore.onLogout();
+    navigateTo('/login');
   })
   
 }

@@ -19,6 +19,11 @@
       "user": "qwerty",
       "password": "1234",
       "id": "ykpoAGS-jT8"
+    },
+    {
+      "user": "lazanahoria",
+      "password": "12344",
+      "id": "hE-eFcCIbWI"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

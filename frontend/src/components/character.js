@@ -1,12 +1,14 @@
 import {qs} from './../utils/dom.js';
 import { alertWarning }from './../utils/alerts.js';
+import { authStore } from '../store/authStore.js';
+import { navigateTo } from '../router/router.js';
 
 export function showCharacters() {
   return `
   <header class="w-full sticky top-0 z-10 bg-slate-800 backdrop-blur-sm border-b border-slate-800/50">
     <div class="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
       <div class="flex-shrink-0">
-        <img src="/public/logo.svg" alt="Logo" class="h-30 w-auto">
+        <img src="/public/logo.svg" alt="Logo" class="h-20 w-auto">
       </div>
       <h1 class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg text-center flex-1">
         Characters
@@ -158,6 +160,8 @@ export function setupCharacters() {
 
     Logout.addEventListener("click",()=>{
     authStore.onLogout();
+    navigateTo('/login');
+  
   })
 
   const cargarPersonajes = async () => {

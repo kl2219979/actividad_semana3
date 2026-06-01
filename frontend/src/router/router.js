@@ -8,17 +8,6 @@ export function navigateTo(path) {
     renderRouter();
 }
 
-export function checkAuth() {
-  if (!authStore.isLogged) {
-    navigateTo("/login"); 
-  }
-  else{
-    renderRouter()
-  }
-}
-
-checkAuth()
-
 export function renderRouter () {
     const app = qs('#app')
     if(!app) {
@@ -26,7 +15,13 @@ export function renderRouter () {
     }
 
     const currentPath = window.location.pathname
-    const route = routes[currentPath] ?? {render: notFoundView, setup: setupNotFoundVideo}
+    let route = routes[currentPath] ?? {render: notFoundView, setup: setupNotFoundVideo}
+
+    if (route.isAuthorized && !authStore.isLoged) {
+        window.history.replaceState({}, "", "/login")
+        route = routes["/login"]
+    }
+
     const render = route.render ?? notFoundView
     app.innerHTML = render()
 
@@ -36,6 +31,8 @@ export function renderRouter () {
 }
 
 export function initRouter() {
+    authStore.loadData()
+
     document.addEventListener('click', (e) => {
         const link = e.target.closest('a')
 

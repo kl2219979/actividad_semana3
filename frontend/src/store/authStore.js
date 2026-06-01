@@ -1,4 +1,3 @@
-import { navigateTo } from "../router/router"
 export const authStore = {
     isLoged: false,
     user: null,
@@ -17,10 +16,9 @@ export const authStore = {
         }
     },
 
-    onLogout(renderPage) {
+    onLogout() {
     localStorage.removeItem('user')
     this.isLoged = false
     this.user = null
-    navigateTo("/login")
     }
 }
