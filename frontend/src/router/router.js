@@ -1,6 +1,7 @@
 import { qs } from "../utils/dom.js";
 import { routes} from "./routes.js";
 import { notFoundView, setupNotFoundVideo } from "./../components/notFoundView.js"
+import { authStore } from "../store/authStore.js";
 
 export function navigateTo(path) {
     window.history.pushState({}, "", path);
