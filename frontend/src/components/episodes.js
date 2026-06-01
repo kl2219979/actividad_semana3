@@ -2,6 +2,25 @@ import { qs } from './../utils/dom.js';
 
 export function showEpisodes() {
   return `
+   <header class="w-full sticky top-0 z-10 bg-slate-800 backdrop-blur-sm border-b border-slate-800/50">
+    <div class="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
+      <div class="flex-shrink-0">
+        <img src="/public/logo.png" alt="Logo" class="h-30 w-auto">
+      </div>
+      <h1 class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg text-center flex-1">
+        Episodes
+      </h1>
+      <div class="flex items-center gap-6">
+        <nav class="flex items-center gap-6">
+          <a href="/" class="text-sm font-semibold text-slate-300 hover:text-lime-400 transition">Characters</a>
+          <a href="/locations" class="text-sm font-semibold text-slate-300 hover:text-lime-400 transition">Locations</a>
+        </nav>
+        <button id="LogoutBtn" class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700">
+          Logout
+        </button>
+      </div>
+    </div>
+  </header>
   <video autoplay muted loop playsinline class="video-fondo fixed top-0 left-0 size-[100%_100%] object-cover -z-10 min-h-screen min-w-screen">
     <source src="/otrofondo.mp4" type="video/mp4"> </video>
     <section class="min-h-screen px-4 py-6">
@@ -73,4 +92,9 @@ export function setupEpisodes() {
     if (numberPage > 1) cambiarPagina(numberPage - 1);
     else alert("Estas en la pagina 1, no puedes retroceder");
   });
+
+    Logout.addEventListener("click",()=>{
+    authStore.onLogout();
+  })
+  
 }
