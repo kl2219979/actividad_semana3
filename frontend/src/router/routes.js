@@ -2,7 +2,7 @@ import { loginPage, setupLogin } from './../components/login.js';
 import { createUserPage, setupCreateUser } from './../components/createUser.js';
 import { showCharacters, setupCharacters } from './../components/character.js';
 import { showEpisodes, setupEpisodes } from './../components/episodes.js';
-
+import { showLocations, setupLocations } from './../components/locations.js';
 
 
 // rutas disponibles de la pagina
@@ -28,8 +28,8 @@ export const routes = {
         isAuthorized: false,
     },
     "/locations": {
-        render: null,
-        setup: null,
+        render: showLocations,
+        setup: setupLocations,
         isAuthorized: false,
     },
     "/episodes": {
