@@ -6,18 +6,18 @@ import { authStore } from '../store/authStore.js';
 
 export function showLocations() {
 return `
-<header class="w-full sticky top-0 z-10 bg-slate-800 backdrop-blur-sm border-b border-slate-800/50">
-    <div class="max-w-6xl mx-auto flex items-center justify-between px-5 py-1">
-      <div class="shrink-0">
-        <img src="/public/logo.svg" alt="Logo" class="h-20 w-auto">
+<header class="w-full sticky top-0 z-10 bg-slate-800 backdrop-blur-sm border-b border-lime-400/50">
+    <div class="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
+      <div class="flex-shrink-0">
+        <img src="/public/logo.svg" alt="Logo" class="w-40 h-12   drop-shadow-[0_0_12px_rgba(132,204,22,0.75)]">
       </div>
-      <h1 class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg text-center flex-1">
+      <h1 class="text-xl md:text-2xl font-bold text-white drop-shadow-lg text-center flex-1">
         Locations
       </h1>
       <div class="flex items-center gap-6">
         <nav class="flex items-center gap-6">
-          <a href="/characters" class="text-sm font-semibold text-slate-300 hover:text-lime-400 transition">Characters</a>
           <a href="/episodes" class="text-sm font-semibold text-slate-300 hover:text-lime-400 transition">Episodes</a>
+          <a href="/characters" class="text-sm font-semibold text-slate-300 hover:text-lime-400 transition">Characters</a>
         </nav>
         <button id="LogoutBtn" class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700">
           Logout
