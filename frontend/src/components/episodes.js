@@ -4,10 +4,10 @@ import { navigateTo } from '../router/router.js';
 
 export function showEpisodes() {
   return `
-  <header class="w-full sticky top-0 z-10 bg-slate-800 backdrop-blur-sm border-b border-slate-800/50">
+  <header class="w-full sticky top-0 z-10 bg-slate-800 backdrop-blur-sm border-b border-lime-400/50">
     <div class="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
       <div class="flex-shrink-0">
-        <img src="/public/logo.svg" alt="Logo" class="h-20 w-auto">
+        <img src="/public/logo.svg" alt="Logo" class="w-40 h-12 drop-shadow-[0_0_12px_rgba(132,204,22,0.75)]">
       </div>
       <h1 class="text-xl md:text-2xl font-bold text-white drop-shadow-lg text-center flex-1">
         Episodes
