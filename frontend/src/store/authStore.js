@@ -1,4 +1,4 @@
-
+import { navigateTo } from "../router/router"
 export const authStore = {
     isLoged: false,
     user: null,
