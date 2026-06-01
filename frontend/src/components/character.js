@@ -1,4 +1,5 @@
 import {qs} from './../utils/dom.js';
+import { alertWarning }from './../utils/alerts.js';
 
 export function showCharacters() {
   return `
@@ -66,7 +67,7 @@ export function setupCharacters() {
       cargarPersonajes();
       actualizarPagina();
     } else {
-      alert("Estas en la pagina 1, no puedes retroceder");
+      alertWarning("Estas en la pagina 1, no puedes retroceder");
     }
   });
 
@@ -111,7 +112,7 @@ export function setupCharacters() {
 
         <p class="mt-2 text-[11px] text-slate-400 leading-relaxed"">
             Ha aparecido en
-            ${personaje.episode.length} episodios
+            ${personaje.episode.length} ${personaje.episode.length == 1 ? "episodio" : "episodios"}
         </p>
 
         <div class="mt-4 flex gap-2">

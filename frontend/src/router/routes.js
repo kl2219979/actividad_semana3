@@ -1,7 +1,9 @@
 import { loginPage, setupLogin } from './../components/login.js';
 import { createUserPage, setupCreateUser } from './../components/createUser.js';
 import { showCharacters, setupCharacters } from './../components/character.js';
-import { showEpisodes, setupEpisodes } from './../components/episodes.js'
+import { showEpisodes, setupEpisodes } from './../components/episodes.js';
+
+
 
 // rutas disponibles de la pagina
 export const routes = {

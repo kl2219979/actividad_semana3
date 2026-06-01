@@ -9,6 +9,11 @@
       "user": "elcoco",
       "password": "12345",
       "id": "FGPfPYMvl-k"
+    },
+    {
+      "user": "andres29",
+      "password": "147",
+      "id": "s5B76T7LPOY"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

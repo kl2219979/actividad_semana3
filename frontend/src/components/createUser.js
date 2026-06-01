@@ -47,7 +47,7 @@ export function createUserPage() {
             <button type="submit" class="pulse-glow mt-2 h-11 rounded-md bg-cyan-400 font-bold uppercase text-slate-950 shadow-[0_0_18px_rgba(34,211,238,0.4)] transition-all hover:bg-cyan-300 hover:scale-[1.01] active:scale-[0.99]">
                 Crear Usuario
             </button>
-            <a href="/login" class="text-center mt-3 text-sm text-slate-400">
+            <a id="btn_login" class="text-center mt-3 text-sm text-slate-400">
                     Ya tienes cuenta? <span class="font-bold text-cyan-300 hover:underline">Inicia sesión aquí</span>
                 </a>
         </form>
@@ -94,6 +94,7 @@ export function setupCreateUser () {
     btnLogin.addEventListener('click', () => {
         navigateTo('/login')
     })
+
 }
 
 
