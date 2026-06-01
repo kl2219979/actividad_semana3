@@ -21,6 +21,6 @@ export const authStore = {
     localStorage.removeItem('user')
     this.isLoged = false
     this.user = null
-    renderPage()
+    navigateTo("/login")
     }
 }
