@@ -9,7 +9,7 @@ export function showEpisodes() {
       <div class="flex-shrink-0">
         <img src="/public/logo.svg" alt="Logo" class="h-20 w-auto">
       </div>
-      <h1 class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg text-center flex-1">
+      <h1 class="text-xl md:text-2xl font-bold text-white drop-shadow-lg text-center flex-1">
         Episodes
       </h1>
       <div class="flex items-center gap-6">

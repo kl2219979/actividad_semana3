@@ -2,15 +2,16 @@ import {qs} from './../utils/dom.js';
 import { alertWarning }from './../utils/alerts.js';
 import { authStore } from '../store/authStore.js';
 import { navigateTo } from '../router/router.js';
+import { createCharacter, getCharacter } from '../services/userService.js';
 
 export function showCharacters() {
   return `
-  <header class="w-full sticky top-0 z-10 bg-slate-800 backdrop-blur-sm border-b border-slate-800/50">
+  <header class="w-full sticky top-0 z-10 bg-slate-800 backdrop-blur-sm border-b border-lime-400/50">
     <div class="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
       <div class="flex-shrink-0">
-        <img src="/public/logo.svg" alt="Logo" class="h-20 w-auto">
+        <img src="/public/logo.svg" alt="Logo" class="w-40 h-12   drop-shadow-[0_0_12px_rgba(132,204,22,0.75)]">
       </div>
-      <h1 class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg text-center flex-1">
+      <h1 class="text-xl md:text-2xl font-bold text-white drop-shadow-lg text-center flex-1">
         Characters
       </h1>
       <div class="flex items-center gap-6">
@@ -24,7 +25,7 @@ export function showCharacters() {
       </div>
     </div>
   </header>
-  
+
     <div id="characters-view" class="mx-auto w-full max-w-6xl mt-6">
     <form id="character-form" class="portal-panel grid gap-4 rounded-lg border border-lime-400/40 bg-black/75 p-4 shadow-[0_0_28px_rgba(132,204,22,0.16)] backdrop-blur-md transition-all duration-300">
       <div>
@@ -92,11 +93,39 @@ export function showCharacters() {
   <main class="relative min-h-screen px-4 text-white">
     <div class="fixed inset-0 -z-10 bg-[url('/fondoImagen.png')] bg-cover bg-center bg-no-repeat"></div>
     <section class="min-h-screen px-4 py-6">
-    <div class="mx-auto max-w-6xl">
+    <div class="mb-4 flex flex-col gap-4 rounded-md border border-lime-400/30 bg-slate-900 p-2 text-white shadow-[0_0_25px_rgba(132,204,22,0.12)] lg:flex-row lg:items-end lg:justify-between max-w-6xl mx-auto">
+        <h2 class="portal-title text-xl font-black text-lime-300">Filtrar Personajes</h2>
+
+        <div class="flex flex-wrap gap-3 lg:justify-end">
+          <label class="grid gap-1.5 text-xs font-semibold text-slate-300">
+            Estado
+            <select id="filter-status"
+              class="h-9 w-full min-w-40 rounded-md border border-lime-400/25 bg-slate-950/90 px-3 text-xs text-lime-50 outline-none transition-all focus:border-lime-400 focus:shadow-[0_0_10px_rgba(163,230,53,0.15)]">
+              <option value="">Todos</option>
+              <option value="alive">Alive</option>
+              <option value="dead">Dead</option>
+              <option value="unknown">Unknown</option>
+            </select>
+          </label>
+
+          <label class="grid gap-1.5 text-xs font-semibold text-slate-300">
+            Genero
+            <select id="filter-gender"
+              class="h-9 w-full min-w-40 rounded-md border border-lime-400/25 bg-slate-950/90 px-3 text-xs text-lime-50 outline-none transition-all focus:border-lime-400 focus:shadow-[0_0_10px_rgba(163,230,53,0.15)]">
+              <option value="">Todos</option>
+              <option value="female">Female</option>
+              <option value="male">Male</option>
+              <option value="genderless">Genderless</option>
+              <option value="unknown">Unknown</option>
+            </select>
+          </label>
+        </div>
+      </div>
+    <div class="mx-auto max-w-6xl ">
       <div
-        class="rounded-md border border-lime-400/30 bg-slate-900 p-3.5 text-white shadow-[0_0_25px_rgba(132,204,22,0.12)]"
+        class="flex flex-col gap-4 rounded-md border border-lime-400/30 bg-slate-900 p-3.5 text-white shadow-[0_0_25px_rgba(132,204,22,0.12)] lg:flex-row lg:items-end lg:justify-between"
       >
-        <div class="flex gap-4">
+        <div class="flex flex-wrap items-center gap-4">
           <button
             id="btnAnterior"
             class="rounded-md border border-sky-500 bg-none px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-700"
@@ -105,7 +134,7 @@ export function showCharacters() {
           </button>
 
           <p class="rounded-md border border-lime-300/40 bg-lime-300/90 px-3 py-2 text-sm font-bold text-slate-950">
-            Pagina <span id="pagina">1</span> de 42
+            Pagina <span id="pagina">1</span> de <span id="total-paginas">42</span>
           </p>
 
           <button
@@ -116,6 +145,7 @@ export function showCharacters() {
           </button>
         </div>
       </div>
+      
 
       <div
         id="personajes"
@@ -129,19 +159,50 @@ export function showCharacters() {
 
 export function setupCharacters() {
   let numberPage = 1;
+  let totalPages = 42;
   const btnAnterior = qs("#btnAnterior");
   const btnSiguiente = qs("#btnSiguiente");
   const currentPage = qs("#pagina");
-  const endpoint = `https://rickandmortyapi.com/api/character/?page=${numberPage}`;
+  const totalPagesText = qs("#total-paginas");
   const Logout = qs("#LogoutBtn");
+  const form = qs("#character-form");
+  // filtros
+  const filterStatus = qs("#filter-status");
+  const filterGender = qs("#filter-gender");
+
+  function buildCharactersUrl() {
+    // esto es para guardar los filtros de la URL
+    const params = new URLSearchParams();
+
+    // Siempre mandamos la pagina actual.
+    params.set("page", numberPage);
+
+    if (filterStatus.value) {
+      params.set("status", filterStatus.value);
+    }
+
+    if (filterGender.value) {
+      params.set("gender", filterGender.value);
+    }
+
+    // armamos la URL final.
+    return `https://rickandmortyapi.com/api/character/?${params.toString()}`;
+  }
   
 
   function actualizarPagina () {
     currentPage.textContent = numberPage;
+    totalPagesText.textContent = totalPages;
   };
 
+  function aplicarFiltros() {
+    numberPage = 1;
+    cargarPersonajes();
+    actualizarPagina();
+  }
+
   btnSiguiente.addEventListener("click", () => {
-    if (numberPage < 42) {
+    if (numberPage < totalPages) {
       numberPage += 1;
       cargarPersonajes();
       actualizarPagina();
@@ -198,16 +259,20 @@ function renderCharacter(character) {
 
   
 
+  filterStatus.addEventListener("change", aplicarFiltros);
+  filterGender.addEventListener("change", aplicarFiltros);
 
   const cargarPersonajes = async () => {
     try {
-      const endpoint = `https://rickandmortyapi.com/api/character/?page=${numberPage}`;
+      const endpoint = buildCharactersUrl();
       const respuesta = await fetch(endpoint);
 
       console.log(respuesta);
       // si la respuesta es correcta
       if (respuesta.status === 200) {
         const datos = await respuesta.json();
+        totalPages = datos.info.pages;
+        actualizarPagina();
 
         let personajes = "";
         datos.results.forEach((personaje) => {
@@ -264,11 +329,22 @@ function renderCharacter(character) {
         
         `;
         });
-        qs("#personajes").innerHTML = personajes;
+        qs("#personajes").innerHTML = personajes || `
+          <p class="col-span-full rounded-md border border-lime-400/30 bg-slate-900 p-6 text-center text-sm text-slate-300">
+            No se encontraron personajes con esos filtros.
+          </p>
+        `;
       } else if (respuesta.status === 401) {
         console.log("pusiste la llave mal");
       } else if (respuesta.status === 404) {
-        console.log("no existe");
+        totalPages = 1;
+        numberPage = 1;
+        actualizarPagina();
+        qs("#personajes").innerHTML = `
+          <p class="col-span-full rounded-md border border-lime-400/30 bg-slate-900 p-6 text-center text-sm text-slate-300">
+            No se encontraron personajes con esos filtros.
+          </p>
+        `;
       } else {
         console.log("Hubo un error raro y no sabemos que paso");
       }
