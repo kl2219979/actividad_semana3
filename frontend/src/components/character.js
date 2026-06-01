@@ -2,7 +2,13 @@ import {qs} from './../utils/dom.js';
 import { alertWarning }from './../utils/alerts.js';
 import { authStore } from '../store/authStore.js';
 import { navigateTo } from '../router/router.js';
-import { createCharacter, getCharacter } from '../services/userService.js';
+import {
+  createCharacter,
+  deleteCharacter,
+  getCharacters,
+  getDeletedCharacterIds,
+  updateCharacter,
+} from '../services/userService.js';
 
 export function showCharacters() {
   return `
@@ -166,6 +172,10 @@ export function setupCharacters() {
   const totalPagesText = qs("#total-paginas");
   const Logout = qs("#LogoutBtn");
   const form = qs("#character-form");
+  const submitButton = form.querySelector('button[type="submit"]');
+  const charactersContainer = qs("#personajes");
+  let editingCharacterId = null;
+  let renderedCharacters = [];
   // filtros
   const filterStatus = qs("#filter-status");
   const filterGender = qs("#filter-gender");
@@ -225,36 +235,136 @@ export function setupCharacters() {
   
   })
 
-  function crearPersonajes() {
+  function getCharacterFormData() {
+    const formData = new FormData(form);
+    return Object.fromEntries(formData.entries());
+  }
+
+  function resetCharacterForm() {
+    editingCharacterId = null;
+    submitButton.textContent = "Crear Personaje";
+    form.reset();
+  }
+
+  function fillCharacterForm(character) {
+    form.elements.name.value = character.name ?? "";
+    form.elements.species.value = character.species ?? "";
+    form.elements.gender.value = character.gender ?? "";
+    form.elements.status.value = character.status ?? "";
+    form.elements.image.value = character.image ?? "";
+    editingCharacterId = String(character.id);
+    submitButton.textContent = "Guardar Cambios";
+  }
+
+  function characterMatchesFilters(character) {
+    const status = character.status?.toLowerCase() ?? "";
+    const gender = character.gender?.toLowerCase() ?? "";
+
+    return (!filterStatus.value || status === filterStatus.value)
+      && (!filterGender.value || gender === filterGender.value);
+  }
+
+  function mergeCharacters(apiCharacters) {
+    const localCharacters = getCharacters();
+    const deletedIds = getDeletedCharacterIds();
+    const localById = new Map(localCharacters.map((character) => [String(character.id), character]));
+    const localOnlyCharacters = localCharacters.filter((character) => String(character.id).startsWith("local-"));
+    const apiMergedCharacters = apiCharacters
+      .filter((character) => !deletedIds.includes(String(character.id)))
+      .map((character) => localById.get(String(character.id)) ?? character);
+
+    return [
+      ...localOnlyCharacters,
+      ...apiMergedCharacters,
+    ].filter(characterMatchesFilters);
+  }
+
+  function renderCharacters(characters) {
+    renderedCharacters = characters;
+    charactersContainer.innerHTML = characters.map((personaje) => `
+      <article class="portal-card group relative h-96 w-full overflow-hidden rounded-md border border-slate-800 bg-slate-900 transition-all duration-300 hover:-translate-y-3 hover:scale-[1.02] hover:border-lime-400">
+        <img
+          src="${personaje.image || '/public/default.png'}"
+          alt="${personaje.name}"
+          loading="lazy"
+          class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+        >
+
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent"></div>
+
+        <div class="absolute bottom-0 left-0 p-5 text-white">
+          <h2 class="mt-2 text-lg font-black text-white truncate drop-shadow-md">
+            ${personaje.name}
+          </h2>
+
+          <p class="text-xs text-slate-300 truncate">
+            ${personaje.species} <span class="mx-1">|</span> ${personaje.gender}
+            <span class="mx-1">|</span> ${personaje.status}
+          </p>
+
+          <p class="mt-2 text-[11px] text-slate-400 leading-relaxed">
+            ${personaje.isLocal ? "Personaje guardado localmente" : `Ha aparecido en ${personaje.episode.length} ${personaje.episode.length == 1 ? "episodio" : "episodios"}`}
+          </p>
+
+          <div class="mt-4 flex gap-2">
+            <button
+              type="button"
+              data-action="edit"
+              data-id="${personaje.id}"
+              class="rounded-md bg-yellow-500 px-3 py-1 text-xs font-semibold text-white transition hover:bg-yellow-600"
+            >
+              Editar
+            </button>
+
+            <button
+              type="button"
+              data-action="delete"
+              data-id="${personaje.id}"
+              class="rounded-md bg-red-700 px-3 py-1 text-xs font-semibold text-white transition hover:bg-red-600"
+            >
+              Eliminar
+            </button>
+          </div>
+        </div>
+      </article>
+    `).join("");
+  }
 
   form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const formData = new FormData(form);
-  const dataObject = Object.fromEntries(formData.entries());
-  createCharacter(dataObject,"customCharacter");
-  renderCharacter(dataObject);
+    event.preventDefault();
+    const dataObject = getCharacterFormData();
+    const savedCharacter = editingCharacterId
+      ? updateCharacter(editingCharacterId, dataObject)
+      : createCharacter(dataObject);
 
-  form.reset();
-  
-  
+    if (savedCharacter) {
+      resetCharacterForm();
+      cargarPersonajes();
+    }
+  });
 
-})}
+  charactersContainer.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-action]");
 
-function renderCharacter(character) {
-  const newCharacter = `
-    <article class="portal-card group relative h-96 w-full overflow-hidden rounded-md border border-slate-800 bg-slate-900">
-      <img src="${character.image || '/public/default.png'}" alt="${character.name}" class="h-full w-full object-cover">
-      <div class="absolute bottom-0 left-0 p-5 text-white">
-        <h2 class="mt-2 text-lg font-black">${character.name}</h2>
-        <p class="text-xs text-slate-300">
-          ${character.species} | ${character.gender} | ${character.status}
-        </p>
-        <p class="mt-2 text-[11px] text-slate-400">Personaje creado manualmente</p>
-      </div>
-    </article>
-  `;
-  qs("#personajes").innerHTML += newCharacter;
-}
+    if (!button) {
+      return;
+    }
+
+    const characterId = button.dataset.id;
+    const character = renderedCharacters.find((item) => String(item.id) === characterId);
+
+    if (button.dataset.action === "edit" && character) {
+      fillCharacterForm(character);
+      form.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    if (button.dataset.action === "delete" && deleteCharacter(characterId)) {
+      if (editingCharacterId === characterId) {
+        resetCharacterForm();
+      }
+      cargarPersonajes();
+    }
+  });
 
 
   
@@ -274,77 +384,32 @@ function renderCharacter(character) {
         totalPages = datos.info.pages;
         actualizarPagina();
 
-        let personajes = "";
-        datos.results.forEach((personaje) => {
-          personajes += `
-        <article class="portal-card group relative h-96 w-full overflow-hidden rounded-md border border-slate-800 bg-slate-900 transition-all duration-300 hover:-translate-y-3 hover:scale-[1.02] hover:border-lime-400">
+        const characters = mergeCharacters(datos.results);
+        renderCharacters(characters);
 
-    <img
-        src="${personaje.image}"
-        alt="${personaje.name}"
-        loading="lazy"
-        
-        class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-    >
-
-    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent"></div>
-
-    <!-- Contenido -->
-    <div class="absolute bottom-0 left-0 p-5 text-white">
-
-        <h2 class="mt-2 text-lg font-black text-white truncate drop-shadow-md">
-            ${personaje.name}
-        </h2>
-
-        <p class="text-xs text-slate-300 truncate">
-            ${personaje.species} <span class="mx-1">|</span> ${personaje.gender}
-            <span class="mx-1">|</span> ${personaje.status}
-        </p>
-
-        <p class="mt-2 text-[11px] text-slate-400 leading-relaxed"">
-            Ha aparecido en
-            ${personaje.episode.length} ${personaje.episode.length == 1 ? "episodio" : "episodios"}
-        </p>
-
-        <div class="mt-4 flex gap-2">
-            <button
-                data-id="${personaje.id}"
-                class="rounded-md bg-yellow-500 px-3 py-1 text-xs font-semibold text-white transition hover:bg-yellow-600"
-            >
-                Editar
-            </button>
-
-            <button
-                data-id="${personaje.id}"
-                class="rounded-md bg-red-700 px-3 py-1 text-xs font-semibold text-white transition hover:bg-red-600"
-            >
-                Eliminar
-            </button>
-        </div>
-
-    </div>
-
-</article>
-        
-        
-        `;
-        });
-        qs("#personajes").innerHTML = personajes || `
+        if (!characters.length) {
+          charactersContainer.innerHTML = `
           <p class="col-span-full rounded-md border border-lime-400/30 bg-slate-900 p-6 text-center text-sm text-slate-300">
             No se encontraron personajes con esos filtros.
           </p>
         `;
+        }
       } else if (respuesta.status === 401) {
         console.log("pusiste la llave mal");
       } else if (respuesta.status === 404) {
         totalPages = 1;
         numberPage = 1;
         actualizarPagina();
-        qs("#personajes").innerHTML = `
-          <p class="col-span-full rounded-md border border-lime-400/30 bg-slate-900 p-6 text-center text-sm text-slate-300">
-            No se encontraron personajes con esos filtros.
-          </p>
-        `;
+        const localCharacters = getCharacters().filter(characterMatchesFilters);
+        renderCharacters(localCharacters);
+
+        if (!localCharacters.length) {
+          charactersContainer.innerHTML = `
+            <p class="col-span-full rounded-md border border-lime-400/30 bg-slate-900 p-6 text-center text-sm text-slate-300">
+              No se encontraron personajes con esos filtros.
+            </p>
+          `;
+        }
       } else {
         console.log("Hubo un error raro y no sabemos que paso");
       }
@@ -353,14 +418,4 @@ function renderCharacter(character) {
     }
   };
   cargarPersonajes();
-
-  let personajeGuardado = getCharacter();
-  if (personajeGuardado) {
-    renderCharacter(personajeGuardado);
-  }
-
-  crearPersonajes();
-  
-
-  
 }
