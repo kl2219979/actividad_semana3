@@ -7,6 +7,17 @@ export function navigateTo(path) {
     renderRouter();
 }
 
+export function checkAuth() {
+  if (!authStore.isLogged) {
+    navigateTo("/login"); 
+  }
+  else{
+    renderRouter()
+  }
+}
+
+checkAuth()
+
 export function renderRouter () {
     const app = qs('#app')
     if(!app) {
