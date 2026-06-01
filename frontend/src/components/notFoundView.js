@@ -6,8 +6,8 @@ export const notFoundView = () => `
         <section class="relative z-10 grid gap-4 text-center">
             <h1 class="text-3xl font-black text-purple-950">404</h1>
             <p class="text-purple-950">La ruta que buscas no existe.</p>
-            <a href="/login" class="rounded-md bg-lime-400 px-4 py-2 font-bold uppercase text-slate-950">
-                Volver al login
+            <a href="/characters" class="rounded-md bg-lime-400 px-4 py-2 font-bold uppercase text-slate-950">
+                Volver
             </a>
         </section>
     </main>

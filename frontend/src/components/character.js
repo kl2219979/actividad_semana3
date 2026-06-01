@@ -1,8 +1,29 @@
 import {qs} from './../utils/dom.js';
 import { alertWarning }from './../utils/alerts.js';
+import { authStore } from '../store/authStore.js';
+import { navigateTo } from '../router/router.js';
 
 export function showCharacters() {
   return `
+  <header class="w-full sticky top-0 z-10 bg-slate-800 backdrop-blur-sm border-b border-slate-800/50">
+    <div class="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
+      <div class="flex-shrink-0">
+        <img src="/public/logo.svg" alt="Logo" class="h-20 w-auto">
+      </div>
+      <h1 class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg text-center flex-1">
+        Characters
+      </h1>
+      <div class="flex items-center gap-6">
+        <nav class="flex items-center gap-6">
+          <a href="/episodes" class="text-sm font-semibold text-slate-300 hover:text-lime-400 transition">Episodes</a>
+          <a href="/locations" class="text-sm font-semibold text-slate-300 hover:text-lime-400 transition">Locations</a>
+        </nav>
+        <button id="LogoutBtn" class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700">
+          Logout
+        </button>
+      </div>
+    </div>
+  </header>
   
     <div id="characters-view" class="mx-auto w-full max-w-6xl mt-6">
     <form id="character-form" class="portal-panel grid gap-4 rounded-lg border border-lime-400/40 bg-black/75 p-4 shadow-[0_0_28px_rgba(132,204,22,0.16)] backdrop-blur-md transition-all duration-300">
@@ -112,6 +133,7 @@ export function setupCharacters() {
   const btnSiguiente = qs("#btnSiguiente");
   const currentPage = qs("#pagina");
   const endpoint = `https://rickandmortyapi.com/api/character/?page=${numberPage}`;
+  const Logout = qs("#LogoutBtn");
   
 
   function actualizarPagina () {
@@ -135,6 +157,12 @@ export function setupCharacters() {
       alertWarning("Estas en la pagina 1, no puedes retroceder");
     }
   });
+
+    Logout.addEventListener("click",()=>{
+    authStore.onLogout();
+    navigateTo('/login');
+  
+  })
 
   const cargarPersonajes = async () => {
     try {

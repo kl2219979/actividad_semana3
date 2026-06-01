@@ -1,6 +1,7 @@
 import { qs } from "../utils/dom.js";
 import { routes} from "./routes.js";
 import { notFoundView, setupNotFoundVideo } from "./../components/notFoundView.js"
+import { authStore } from "../store/authStore.js";
 
 export function navigateTo(path) {
     window.history.pushState({}, "", path);
@@ -14,7 +15,13 @@ export function renderRouter () {
     }
 
     const currentPath = window.location.pathname
-    const route = routes[currentPath] ?? {render: notFoundView, setup: setupNotFoundVideo}
+    let route = routes[currentPath] ?? {render: notFoundView, setup: setupNotFoundVideo}
+
+    if (route.isAuthorized && !authStore.isLoged) {
+        window.history.replaceState({}, "", "/login")
+        route = routes["/login"]
+    }
+
     const render = route.render ?? notFoundView
     app.innerHTML = render()
 
@@ -24,6 +31,8 @@ export function renderRouter () {
 }
 
 export function initRouter() {
+    authStore.loadData()
+
     document.addEventListener('click', (e) => {
         const link = e.target.closest('a')
 
