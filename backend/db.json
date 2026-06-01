@@ -14,6 +14,11 @@
       "user": "andres29",
       "password": "147",
       "id": "s5B76T7LPOY"
+    },
+    {
+      "user": "qwerty",
+      "password": "1234",
+      "id": "ykpoAGS-jT8"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

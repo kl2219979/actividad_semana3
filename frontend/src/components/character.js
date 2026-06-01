@@ -3,6 +3,71 @@ import { alertWarning }from './../utils/alerts.js';
 
 export function showCharacters() {
   return `
+  
+    <div id="characters-view" class="mx-auto w-full max-w-6xl mt-6">
+    <form id="character-form" class="portal-panel grid gap-4 rounded-lg border border-lime-400/40 bg-black/75 p-4 shadow-[0_0_28px_rgba(132,204,22,0.16)] backdrop-blur-md transition-all duration-300">
+      <div>
+        <h2 class="portal-title mt-1 text-xl font-black text-lime-300">Crear Nuevo Personaje</h2>
+        <p class="text-xs text-slate-400 mt-1">Registra los datos biologicos del personaje.</p>
+      </div>
+
+      <section class="grid gap-3 grid-cols-1 md:grid-cols-3">
+        <label class="grid gap-1.5 text-xs font-semibold text-slate-300">
+          Nombre del personaje
+          <input
+            class="h-9 rounded-md bg-slate-950/90 px-3 text-xs text-lime-50 outline-none transition-all placeholder:text-slate-600 border border-lime-400/25 focus:border-lime-400 focus:shadow-[0_0_10px_rgba(163,230,53,0.15)]"
+            name="name" type="text" placeholder="Cronenberg Morty" required>
+        </label>
+
+        <label class="grid gap-1.5 text-xs font-semibold text-slate-300">
+          Especie o Raza
+          <input
+            class="h-9 rounded-md bg-slate-950/90 px-3 text-xs text-lime-50 outline-none transition-all placeholder:text-slate-600 border border-lime-400/25 focus:border-lime-400 focus:shadow-[0_0_10px_rgba(163,230,53,0.15)]"
+            name="species" type="text" placeholder="Ej: Humano, Clone, Cyborg" required>
+        </label>
+
+        <label class="grid gap-1.5 text-xs font-semibold text-slate-300">
+          Genero
+          <select name="gender" required
+            class="h-9 rounded-md bg-slate-950/90 px-3 text-xs text-lime-50 outline-none transition-all border border-lime-400/25 focus:border-lime-400 focus:shadow-[0_0_10px_rgba(163,230,53,0.15)]">
+            <option value="">Selecciona una opcion</option>
+            <option value="Female">Female</option>
+            <option value="Male">Male</option>
+            <option value="Genderless">Genderless</option>
+            <option value="unknown">unknown</option>
+          </select>
+        </label>
+      </section>
+
+      <section class="grid gap-3 grid-cols-1 md:grid-cols-3">
+        <label class="grid gap-1.5 text-xs font-semibold text-slate-300">
+          Estado del personaje
+          <select name="status" required
+            class="h-9 rounded-md bg-slate-950/90 px-3 text-xs text-lime-50 outline-none transition-all border border-lime-400/25 focus:border-lime-400 focus:shadow-[0_0_10px_rgba(163,230,53,0.15)]">
+            <option value="">Selecciona una opcion</option>
+            <option value="Alive">Alive</option>
+            <option value="Dead">Dead</option>
+            <option value="unknown">unknown</option>
+          </select>
+        </label>
+
+        <label class="grid gap-1.5 text-xs font-semibold text-slate-300">
+          URL de Imagen del Personaje
+          <input id="form-image-input"
+            class="h-9 rounded-md bg-slate-950/90 px-3 text-xs text-lime-50 outline-none transition-all placeholder:text-slate-600 border border-lime-400/25 focus:border-lime-400 focus:shadow-[0_0_10px_rgba(163,230,53,0.15)]"
+            name="image" type="url" placeholder="https://example.com/imagen.png">
+        </label>
+
+        <div class="grid gap-1.5 text-xs font-semibold text-slate-300">
+          <span class="invisible">jjsjs</span>
+          <button type="submit"
+            class="pulse-glow h-9 w-full rounded-md bg-lime-400 px-5 text-[11px] font-black uppercase text-slate-950 shadow-[0_0_18px_rgba(132,204,22,0.35)] transition-all hover:bg-lime-300">
+            Crear Personaje
+          </button>
+        </div>
+      </section>
+    </form>
+  </div>
   <main class="relative min-h-screen px-4 text-white">
     <div class="fixed inset-0 -z-10 bg-[url('/fondoImagen.png')] bg-cover bg-center bg-no-repeat"></div>
     <section class="min-h-screen px-4 py-6">
@@ -86,7 +151,6 @@ export function setupCharacters() {
           personajes += `
         <article class="portal-card group relative h-96 w-full overflow-hidden rounded-md border border-slate-800 bg-slate-900 transition-all duration-300 hover:-translate-y-3 hover:scale-[1.02] hover:border-lime-400">
 
-    <!-- Imagen -->
     <img
         src="${personaje.image}"
         alt="${personaje.name}"
@@ -95,7 +159,6 @@ export function setupCharacters() {
         class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
     >
 
-    <!-- Overlay oscuro -->
     <div class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent"></div>
 
     <!-- Contenido -->
