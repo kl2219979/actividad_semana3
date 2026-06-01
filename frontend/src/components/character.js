@@ -164,6 +164,41 @@ export function setupCharacters() {
   
   })
 
+  function crearPersonajes() {
+
+  form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const formData = new FormData(form);
+  const dataObject = Object.fromEntries(formData.entries());
+  createCharacter(dataObject,"customCharacter");
+  renderCharacter(dataObject);
+
+  form.reset();
+  
+  
+
+})}
+
+function renderCharacter(character) {
+  const newCharacter = `
+    <article class="portal-card group relative h-96 w-full overflow-hidden rounded-md border border-slate-800 bg-slate-900">
+      <img src="${character.image || '/public/default.png'}" alt="${character.name}" class="h-full w-full object-cover">
+      <div class="absolute bottom-0 left-0 p-5 text-white">
+        <h2 class="mt-2 text-lg font-black">${character.name}</h2>
+        <p class="text-xs text-slate-300">
+          ${character.species} | ${character.gender} | ${character.status}
+        </p>
+        <p class="mt-2 text-[11px] text-slate-400">Personaje creado manualmente</p>
+      </div>
+    </article>
+  `;
+  qs("#personajes").innerHTML += newCharacter;
+}
+
+
+  
+
+
   const cargarPersonajes = async () => {
     try {
       const endpoint = `https://rickandmortyapi.com/api/character/?page=${numberPage}`;
@@ -242,5 +277,14 @@ export function setupCharacters() {
     }
   };
   cargarPersonajes();
+
+  let personajeGuardado = getCharacter();
+  if (personajeGuardado) {
+    renderCharacter(personajeGuardado);
+  }
+
+  crearPersonajes();
+  
+
   
 }
