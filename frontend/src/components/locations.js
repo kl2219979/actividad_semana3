@@ -1,10 +1,31 @@
 import {qs} from './../utils/dom.js';
 import {fetchApi} from "../services/api.js"
 const URL_LOCATION = 'https://rickandmortyapi.com/api/location';
+import { navigateTo } from '../router/router.js';
+import { authStore } from '../store/authStore.js';
 
 export function showLocations() {
 return `
-<main class="relative min-h-screen px-4 text-white">
+<header class="w-full sticky top-0 z-10 bg-slate-800 backdrop-blur-sm border-b border-slate-800/50">
+    <div class="max-w-6xl mx-auto flex items-center justify-between px-5 py-1">
+      <div class="shrink-0">
+        <img src="/public/logo.svg" alt="Logo" class="h-30 w-auto">
+      </div>
+      <h1 class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg text-center flex-1">
+        Locations
+      </h1>
+      <div class="flex items-center gap-6">
+        <nav class="flex items-center gap-6">
+          <a href="/characters" class="text-sm font-semibold text-slate-300 hover:text-lime-400 transition">Characters</a>
+          <a href="/episodes" class="text-sm font-semibold text-slate-300 hover:text-lime-400 transition">Episodes</a>
+        </nav>
+        <button id="LogoutBtn" class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700">
+          Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
 <div class="fixed inset-0 -z-10 bg-[url('/fondoImagen.png')] bg-cover bg-center bg-no-repeat"></div>
 <section class="min-h-screen px-4 py-6">
 <div class="mx-auto max-w-6xl">
@@ -49,6 +70,7 @@ let numberPage = 1;
 const btnAnterior = qs("#btnAnterior");
 const btnSiguiente = qs("#btnSiguiente");
 const currentPage = qs("#pagina");
+const logout = qs('#LogoutBtn');
 const endpoint = `https://rickandmortyapi.com/api/location/?page=${numberPage}`;
 
 
@@ -72,6 +94,11 @@ if (numberPage > 1) {
 } else {
     alert("Estas en la pagina 1, no puedes retroceder");
 }
+});
+logout.addEventListener("click",()=>{
+    alert("Cerrando sesión...");
+    authStore.onLogout();
+    navigateTo('/login');
 });
 
 const cargarlocaciones= async () => {
@@ -107,16 +134,6 @@ try {
         <dd class="font-semibold text-slate-100 truncate">${personaje.residents.length}</dd>
       </div>
     </dl>
-  </div>
-
-  
-  <div class="grid  gap-2 shrink-0">
-    <button data-id="${personaje.id}" class="rounded-md bg-yellow-500 px-3 py-2 text-xs font-semibold text-slate-900 hover:bg-yellow-400 transition-colors">
-      Editar
-    </button>
-    <button data-id="${personaje.id}" class="rounded-md bg-red-600 px-3 py-2 text-xs font-semibold text-white hover:bg-red-500 transition-colors">
-      Eliminar
-    </button>
   </div>
 
 </article>`       

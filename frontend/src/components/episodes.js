@@ -17,7 +17,7 @@ export function showEpisodes() {
           <a href="/characters" class="text-sm font-semibold text-slate-300 hover:text-lime-400 transition">Characters</a>
           <a href="/locations" class="text-sm font-semibold text-slate-300 hover:text-lime-400 transition">Locations</a>
         </nav>
-        <button id="LogoutBtn" class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700">
+        <button id="Logout_Btn" class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700">
           Logout
         </button>
       </div>
@@ -47,7 +47,7 @@ export function setupEpisodes() {
   const btnAnterior = qs("#btnAnteriorEp");
   const btnSiguiente = qs("#btnSiguienteEp");
   const currentPage = qs("#paginaEp");
-  const logout = qs('#LogoutBtn');
+  const logout = qs('#Logout_Btn');
 
   const actualizarPagina = () => {
     currentPage.textContent = numberPage;
