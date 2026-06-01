@@ -7,7 +7,7 @@ export function showEpisodes() {
   <header class="w-full sticky top-0 z-10 bg-slate-800 backdrop-blur-sm border-b border-slate-800/50">
     <div class="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
       <div class="flex-shrink-0">
-        <img src="/public/logo.svg" alt="Logo" class="h-30 w-auto">
+        <img src="/public/logo.svg" alt="Logo" class="h-20 w-auto">
       </div>
       <h1 class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg text-center flex-1">
         Episodes
@@ -27,13 +27,29 @@ export function showEpisodes() {
     <source src="/otrofondo.mp4" type="video/mp4"> </video>
     <section class="min-h-screen px-4 py-6">
       <div class="mx-auto max-w-6xl">
-        <div class="rounded-md border border-lime-400/30 bg-slate-900 p-3.5 text-white shadow-[0_0_25px_rgba(132,204,22,0.12)]">
-          <div class="flex gap-4">
-            <button id="btnAnteriorEp" class="rounded-md border border-sky-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-700">Atras</button>
-            <p class="rounded-md border border-lime-300/40 bg-lime-300/90 px-3 py-2 text-sm font-bold text-slate-950">
-              Pagina <span id="paginaEp">1</span> de 3
-            </p>
-            <button id="btnSiguienteEp" class="rounded-md border border-sky-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-700">Siguiente</button>
+        <div id="barra_navegacion" class="rounded-md border border-lime-400/30 bg-slate-900 p-3.5 text-white shadow-[0_0_25px_rgba(132,204,22,0.12)]">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div class="flex gap-4 h-full">
+              <button id="btnAnteriorEp" class="rounded-md border border-sky-500 h-9 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-700">Atras</button>
+              <p class="rounded-md border border-lime-300/40 bg-lime-300/90 h-9 px-3 py-2 text-sm font-bold text-slate-950">
+                Pagina <span id="paginaEp">1</span> de 3
+              </p>
+              <button id="btnSiguienteEp" class="rounded-md border border-sky-500 h-9 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-700">Siguiente</button>
+            </div>
+            <div class="flex gap-3 h-full">
+              <label class="grid gap-1.5 text-xs font-semibold text-slate-300">
+                <input id="seasonFilter" type="number" min="1" max="5" placeholder="Temporada" class="h-9 w-28 rounded-md border border-lime-400/25 bg-slate-950/90 px-3 text-xs text-lime-50 outline-none placeholder:text-slate-600 focus:border-lime-400">
+              </label>
+              <label class="grid gap-1.5 text-xs font-semibold text-slate-300">
+                <input id="episodeFilter" type="number" min="1" placeholder="Capitulo" class="h-9 w-28 rounded-md border border-lime-400/25 bg-slate-950/90 px-3 text-xs text-lime-50 outline-none placeholder:text-slate-600 focus:border-lime-400">
+              </label>
+              <button id="btnBuscarEp" type="button" class="h-9 rounded-md bg-lime-400 px-4 text-xs font-bold uppercase text-slate-950 transition hover:bg-lime-300">
+                Buscar
+              </button>
+              <button id="btnLimpiarEp" type="button" class="h-9 rounded-md border border-sky-500 px-4 text-xs font-semibold text-white transition hover:bg-sky-700">
+                Limpiar
+              </button>
+            </div>
           </div>
         </div>
         <div id="episodios" class="mt-5 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"></div>
@@ -48,6 +64,23 @@ export function setupEpisodes() {
   const btnSiguiente = qs("#btnSiguienteEp");
   const currentPage = qs("#paginaEp");
   const logout = qs('#Logout_Btn');
+  const seasonFilter = qs('#seasonFilter');
+  const episodeFilter = qs('#episodeFilter');
+  const btnBuscar = qs('#btnBuscarEp');
+  const btnLimpiar = qs('#btnLimpiarEp');
+
+  const buildEpisodeCode = () => {
+    const season = seasonFilter.value.trim();
+    const episode = episodeFilter.value.trim();
+
+    if (!season && !episode) {
+      return "";
+    }
+
+    const seasonCode = season ? `S${season.padStart(2, "0")}` : "";
+    const episodeCode = episode ? `E${episode.padStart(2, "0")}` : "";
+    return `${seasonCode}${episodeCode}`;
+  };
 
   const actualizarPagina = () => {
     currentPage.textContent = numberPage;
@@ -55,7 +88,14 @@ export function setupEpisodes() {
 
   const cargarEpisodios = async () => {
     try {
-      const endpoint = `https://rickandmortyapi.com/api/episode?page=${numberPage}`;
+      const params = new URLSearchParams({ page: numberPage });
+      const episodeCode = buildEpisodeCode();
+
+      if (episodeCode) {
+        params.set("episode", episodeCode);
+      }
+
+      const endpoint = `https://rickandmortyapi.com/api/episode?${params.toString()}`;
       const respuesta = await fetch(endpoint);
 
       if (respuesta.ok) {
@@ -71,6 +111,12 @@ export function setupEpisodes() {
             </div>
           </article>
         `).join("");
+      } else if (respuesta.status === 404) {
+        qs("#episodios").innerHTML = `
+          <p class="col-span-full rounded-md border border-lime-400/30 bg-slate-900 p-4 text-center text-sm text-slate-300">
+            No se encontraron episodios para ese filtro.
+          </p>
+        `;
       } else {
         console.error("Error cargando episodios");
       }
@@ -94,6 +140,16 @@ export function setupEpisodes() {
   btnAnterior.addEventListener("click", () => {
     if (numberPage > 1) cambiarPagina(numberPage - 1);
     else alert("Estas en la pagina 1, no puedes retroceder");
+  });
+
+  btnBuscar.addEventListener("click", () => {
+    cambiarPagina(1);
+  });
+
+  btnLimpiar.addEventListener("click", () => {
+    seasonFilter.value = "";
+    episodeFilter.value = "";
+    cambiarPagina(1);
   });
 
   logout.addEventListener("click",()=>{

@@ -9,7 +9,7 @@ return `
 <header class="w-full sticky top-0 z-10 bg-slate-800 backdrop-blur-sm border-b border-slate-800/50">
     <div class="max-w-6xl mx-auto flex items-center justify-between px-5 py-1">
       <div class="shrink-0">
-        <img src="/public/logo.svg" alt="Logo" class="h-30 w-auto">
+        <img src="/public/logo.svg" alt="Logo" class="h-20 w-auto">
       </div>
       <h1 class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg text-center flex-1">
         Locations

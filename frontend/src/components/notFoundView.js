@@ -5,7 +5,7 @@ export const notFoundView = () => `
     <source src="/fondohome.mp4" type="video/mp4"> </video>
         <section class="relative z-10 grid gap-4 text-center">
             <h1 class="text-3xl font-black text-purple-950">404</h1>
-            <p class="text-purple-950">La ruta que buscas no existe.</p>
+            <p class="text-purple-950 text-2xl font-bold">La ruta que buscas no existe.</p>
             <a href="/characters" class="rounded-md bg-lime-400 px-4 py-2 font-bold uppercase text-slate-950">
                 Volver
             </a>
